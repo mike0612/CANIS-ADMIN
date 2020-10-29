@@ -1,0 +1,255 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-clipboard'" [menu]="'Adopción'" [subicon]="'fa-paw'" [submenu]="'Mascotas'">
+  </app-page-header>
+  <div class="row">
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          Mascotas para adopción
+          <div class="card-close">
+            <!--Agregar-->
+            <button class="boton" (click)="openAdd(agregar,'Agregar')">
+              <i class="fa fa-plus-circle"> Agregar</i>
+            </button>
+            <!--Ver-->
+            <div ngbDropdown class="d-inline-block dropdown">
+              <button ngbDropdownToggle class="boton">
+                <i class="fa fa-eye"></i>Ver
+              </button>
+              <div ngbDropdownMenu>
+                <button class="dropdown-item" *ngFor="let t of filter" (click)="getMascotasFiltro(t)">
+                  {{t.tipo}}
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Folio</th>
+                  <th>Foto</th>
+                  <th>Descripción</th>
+                  <th>Talla</th>
+                  <th>Edad</th>
+                  <th>Sexo</th>
+                  <th>Raza</th>
+                  <th>Tipo</th>
+                  <th colspan="2" title="Modificar/Eliminar">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let m of mascotas; let i=index;">
+
+                  <td>{{i+1}}</td>
+                  <td>{{m.folio}}</td>
+                  <td>
+                    <img style="width: 60px;height:40px;" src="{{m.foto}}">
+                  </td>
+                  <td>{{ 
+                    (m.descripcion.length>15) ? (m.descripcion | slice:0:15) + '...':(m.descripcion) }}
+                  </td>
+                  <td>{{m.talla}}</td>
+                  <td>{{m.edad}}</td>
+                  <td>{{m.sexo}}</td>
+                  <td>{{m.raza}}</td>
+                  <td>{{m.tipo}}</td>
+                  <td>
+                    <i class="fa fa-pencil" aria-hidden="true" (click)="openEdit(m,m.folio,editar)"
+                      title="Modificar"></i>
+                  </td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" (click)="deleteMascota(m)" title="Eliminar"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <app-page-loading [title]="'Cargando datos'" *ngIf="loadingDB"></app-page-loading>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Large modal -->
+  <ng-template #agregar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Agregar nuevo para adopción</h5>
+    </div>
+    <div class="modal-body">
+      <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge"></app-page-loading>
+      <div align="center" *ngIf="newMascota.foto">
+        <img src={{newMascota.foto}} alt="" style="width: 150px;">
+      </div>
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                  (change)="onUploadImageAdd($event,newMascota)" name="foto">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Descripción</span>
+              <textarea class="form-control" rows="2" aria-label="small" aria-describedby="inputGroup-sizing-sm"
+                name="descripcion" [(ngModel)]="newMascota.descripcion" required></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Talla</label>
+              </div>
+              <select class="custom-select" [(ngModel)]="newMascota.talla" name="talla" required>
+                <option *ngFor="let t of talla" [value]="t.t">
+                  <span>{{t.t}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Edad</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="edad" required [(ngModel)]="newMascota.edad">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Sexo</label>
+              </div>
+              <select class="custom-select" [(ngModel)]="newMascota.sexo" name="sexo" required>
+                <option *ngFor="let sx of sexo" [value]="sx.sexo">
+                  <span>{{sx.sexo}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Raza</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="raza" required [(ngModel)]="newMascota.raza">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Tipo</label>
+              </div>
+              <select class="custom-select" [(ngModel)]="newMascota.tipo" name="tipo" required>
+                <option *ngFor="let t of tipo" [value]="t.tipo">
+                  <span>{{t.tipo}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" (click)="addMascota()"
+        [disabled]="!newMascota.foto || f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModalNuevo(newMascota)">Cancelar</button>
+    </div>
+  </ng-template>
+
+  <ng-template #editar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Editar folio: {{title}}</h5>
+    </div>
+    <div class="modal-body">
+      <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge"></app-page-loading>
+      <div align="center" *ngIf="mascota.foto">
+        <img class="preview" src={{mascota.foto}} alt="" style="width: 150px;">
+      </div>
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                  (change)="onUploadImageEdit($event, mascota)" name="foto">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Descripción</span>
+              <textarea class="form-control" rows="2" aria-label="small" aria-describedby="inputGroup-sizing-sm"
+                name="descripcion" required [(ngModel)]="mascota.descripcion"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Talla</label>
+              </div>
+              <select class="custom-select" [(ngModel)]="mascota.talla" name="talla" required>
+                <option *ngFor="let t of talla" [value]="t.t">
+                  <span>{{t.t}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Edad</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="edad" required [(ngModel)]="mascota.edad">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Sexo</label>
+              </div>
+              <select class="custom-select" [(ngModel)]="mascota.sexo" name="sexo" required>
+                <option *ngFor="let sx of sexo" [value]="sx.sexo">
+                  <span>{{sx.sexo}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Raza</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="raza" required [(ngModel)]="mascota.raza">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Tipo</label>
+              </div>
+              <select class="custom-select" [(ngModel)]="mascota.tipo" name="tipo" required>
+                <option *ngFor="let t of tipo" [value]="t.tipo">
+                  <span>{{t.tipo}}</span>
+                </option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" (click)="editMascota(mascota)"
+        [disabled]="!mascota.foto || f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+    </div>
+  </ng-template>
+
+</div>

@@ -1,0 +1,34 @@
+<div class="login-page" [@routerTransition]>
+  <div class="row justify-content-md-center">
+    <div class="col-md-4 shadow">
+      <hr>
+      <img src="assets/images/logo.png" width="150px" class="user-avatar" />
+      <h2>Administración ARCA</h2>
+      <h1>Recuperar contraseña</h1>
+      <form class="form-validate" #f="ngForm">
+        <div class="form-content">
+          <p class="text-justify txt">Para recuperar su contraseña deberá ingresar su correo
+            con el que acostumbra iniciar sesión. Después de enviar, en breve recibirá un
+            enlace para restablecer la contraseña.
+          </p>
+          <div class="form-group">
+            <input type="text" name="email" required class="form-control input-underline input-lg"
+              placeholder="Ingrese su correo electrónico" [(ngModel)]="user.correo" />
+          </div>
+        </div>
+        <button class="btn rounded-btn" type="submit" (click)="validation(loading)" [disabled]="f.invalid">
+          Enviar
+        </button>
+        <div class="form-group">
+            <a class="float-center" routerLink="/login">Regresar</a>
+        </div>
+        <hr>
+      </form>
+    </div>
+  </div>
+  <ng-template #loading>
+    <div class="modal-body">
+      <app-page-loading [title]="title"></app-page-loading>
+    </div>
+  </ng-template>
+</div>

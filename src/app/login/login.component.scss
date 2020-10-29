@@ -1,0 +1,122 @@
+$topnav-background-color: #fff;
+:host {
+    display: block;
+}
+
+.login-page {
+    position: absolute;
+    top: 1.5rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background: $topnav-background-color;
+    text-align: center;
+    color: #012060;
+    padding: 2em;
+    
+    .shadow{
+        border-radius: 10px;
+        -webkit-box-shadow: 0px 2px 20px -4px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 2px 20px -4px rgba(0,0,0,0.75);
+        box-shadow: 0px 2px 20px -4px rgba(0,0,0,0.75);
+        height: 10%;
+    }
+
+    .col-lg-4 {
+        padding: 0;
+    }
+    
+    .input-lg {
+        height: 46px;
+        padding: 10px 16px;
+        font-size: 18px;
+        line-height: 0.1;
+        border-radius: 0;
+    }
+    
+    .input-underline {
+        background: 0 0;
+        border: none;
+        box-shadow: none;
+        border-bottom: 2px solid rgba(1, 32, 96, 0.5);
+        color: rgb(1, 32, 96);
+        border-radius: 0;
+    }
+    .input-underline:focus {
+        border-bottom: 2px solid rgb(1, 32, 96);
+        box-shadow: none;
+    }
+    .rounded-btn {
+        -webkit-border-radius: 50px;
+        border-radius: 50px;
+        color: #fff;
+        background: #012060;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        font-size: 18px;
+        line-height: 40px;
+        padding: 0 30px;        
+    }
+    
+
+    h1 {
+        font-weight: 300;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 25px;
+        small {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+
+    h2 {
+        font-weight: 150;
+        margin-top: -15px;
+        margin-bottom: 10px;
+        font-size: 20px;
+        small {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+
+    .form-group {
+        padding: 8px 0;
+        
+        input::-webkit-input-placeholder {
+            color: #2b4d9779 !important;
+        }
+
+        input:-moz-placeholder {
+            /* Firefox 18- */
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        input::-moz-placeholder {
+            /* Firefox 19+ */
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        input:-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+    }
+    
+    .form-content {
+        padding: 20px 0;
+    }
+
+    .user-avatar {
+        width: 70%;
+    }
+    
+    .forgot{
+        top: 10px;
+        font-size: 15px;
+    }
+
+    .forgot:hover{
+        color: #f80e0e;
+        cursor: pointer;
+    }
+
+}

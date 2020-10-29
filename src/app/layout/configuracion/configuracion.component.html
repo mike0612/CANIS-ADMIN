@@ -1,0 +1,293 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-cog'" [menu]="'Ajustes'"></app-page-header>
+  <div class="row">
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          Administradores
+          <div class="card-close">
+            <!--Agregar-->
+            <button class="boton" (click)="openAdd(agregar,'Agregar')">
+              <i class="fa fa-plus-circle"> Agregar Administrador</i>
+            </button>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Folio</th>
+                  <th>Nombre</th>
+                  <th>Apellidos</th>
+                  <th>Cargo</th>
+                  <th>Correo</th>
+                  <th>Teléfono</th>
+                  <th colspan="2" title="Modificar/Eliminar">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let u of usuarios; let i=index;">
+
+                  <td>{{i+1}}</td>
+                  <td>{{u.folio}}</td>
+                  <td>
+                    {{(u.nombre.length>10) ? (u.nombre | slice:0:15) + '...':(u.nombre) }}
+                  </td>
+                  <td>
+                    {{(u.apellidos.length>10) ? (u.apellidos | slice:0:15) + '...':(u.apellidos) }}
+                  </td>
+                  <td>{{u.cargo}}</td>
+                  <td>{{u.correo}}</td>
+                  <td>{{u.telefono}}</td>
+                  <td>
+                    <i class="fa fa-pencil" aria-hidden="true" (click)="openEdit(u,u.folio,editar)"
+                      title="Cambiar permisos"></i>
+                  </td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" title="Eliminar"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <app-page-loading [title]="'Cargando datos'" *ngIf="loadingDB"></app-page-loading>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Large modal -->
+  <ng-template #agregar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Agregar usuario</h5>
+    </div>
+    <div class="modal-body">
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="nombre" required [(ngModel)]="newUsuario.nombre">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="apellidos" required [(ngModel)]="newUsuario.apellidos">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Cargo</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="cargo" required [(ngModel)]="newUsuario.cargo">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Teléfono</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="telefono" required [(ngModel)]="newUsuario.telefono">
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="alert alert-danger" *ngIf="errorMail">
+                Ingrese un correo válido "Ej. correo@mail.com"
+              </div>
+              <div class="alert alert-danger alert-dismissible" *ngIf="errorMailExiste">
+                El correo ya está registrado, intente con otro.
+              </div>
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Correo</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="correo" required [(ngModel)]="newUsuario.correo" placeholder="Será el correo de acceso">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="alert alert-danger alert-dismissible" *ngIf="errorPass">
+                Las contraseñas deben coincidir y tener una longitud mayor a 6
+              </div>
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Contraseña</span>
+              </div>
+              <input type="password" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="password" required [(ngModel)]="pass.password" placeholder="El usuario deberá cambiarlo después">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Confirmar contraseña</span>
+              </div>
+              <input type="password" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="confirmarPass" required [(ngModel)]="pass.confirmarPass">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Módulos autorizados</label>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="adopta" [(ngModel)]="modulos.adopta"> Adopta
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="noticias" [(ngModel)]="modulos.noticias"> Noticias
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="tips" [(ngModel)]="modulos.tips"> Tips
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="denuncias" [(ngModel)]="modulos.denuncias"> Denuncias
+                  </label>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="ajustes" [(ngModel)]="modulos.ajustes"> Ajustes
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="web" [(ngModel)]="modulos.web"> Ajustes
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="movil" [(ngModel)]="modulos.ajustes"> movil
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" (click)="validation()" [disabled]="f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModalNuevo(newUsuario)">Cancelar</button>
+    </div>
+  </ng-template>
+
+  <ng-template #editar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Modificar a {{usuario.correo}}</h5>
+    </div>
+    <div class="modal-body">
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Nombre</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="nombre" required [(ngModel)]="usuario.nombre">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="apellidos" required [(ngModel)]="usuario.apellidos">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Cargo</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="cargo" required [(ngModel)]="usuario.cargo">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Teléfono</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="telefono" required [(ngModel)]="usuario.telefono">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Correo</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="correo" required [(ngModel)]="usuario.correo" disabled>
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            <label>Módulos autorizados</label>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="adopta" [(ngModel)]="modulos.adopta"> Adopta
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="noticias" [(ngModel)]="modulos.noticias"> Noticias
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="tips" [(ngModel)]="modulos.tips"> Tips
+                  </label>
+                </div>                
+              </div>
+              <div class="col-lg-6">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="denuncias" [(ngModel)]="modulos.denuncias"> Denuncias
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="ajustes" [(ngModel)]="modulos.ajustes"> Ajustes
+                  </label>
+                </div>                
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" value="true" name="movil" [(ngModel)]="modulos.movil"> Mobil
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" (click)="editUsuario(usuario)"
+        [disabled]="f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,167 @@
+<nav class="sidebar" [ngClass]="{ sidebarPushRight: isActive, collapsed: collapsed }">
+    <div class="list-group" *ngFor="let u of usuario">
+        <h1 class="mtitle">
+            <i class="fa fa-fw fa-bars"></i>&nbsp;
+            {{ 'Menu' | translate }}            
+        </h1>        
+        <a routerLink="/estadisticas" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;            
+            <span>{{ 'Statistics' | translate }}</span>
+        </a>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('pagesAdopta')" *ngIf="u.modulos.adopta">
+                <i class="fa fa-clipboard"></i>&nbsp;
+                <span>{{ 'Adopta' | translate }} 
+                    <i class="fa fa-arrow-circle-down" style="font-size: 13px;"></i>
+                </span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'pagesAdopta'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/mascotas" [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-paw"></i>&nbsp;
+                            <span>{{ 'Mascotas' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/mascotaSolicitudes" [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-file-o"></i>&nbsp;
+                            <span>{{ 'Solicitudes' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/mascotasAdoptadas" [routerLinkActive]="['router-link-active']">
+                            <i class="fa fa-heart"></i>&nbsp;
+                            <span>{{ 'Adoptados' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div>
+        <!-- <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('pagesPerdidos')">
+                <i class="fa fa-search"></i>&nbsp;
+                <span>{{ 'Perdidos' | translate }}</span>
+            </a>
+            <li class="nested" [class.expand]="showMenu === 'pagesPerdidos'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/perdidos">
+                            <i class="fa fa-compass"></i>&nbsp;
+                            <span>{{ 'Publicar' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/perdidosReportes">
+                            <i class="fa fa-id-card"></i>&nbsp;
+                            <span>{{ 'Reportados' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/perdidosEntregados">
+                            <i class="fa fa-hand-paper-o"></i>&nbsp;
+                            <span>{{ 'Entregados' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </div> -->
+        <a [routerLink]="['/noticias']" [routerLinkActive]="['router-link-active']" class="list-group-item" *ngIf="u.modulos.noticias">
+            <i class="fa fa-fw fa-newspaper-o"></i>&nbsp;
+            <span>{{ 'Noticias' | translate }}</span>
+        </a>
+        <a [routerLink]="['/tips']" [routerLinkActive]="['router-link-active']" class="list-group-item" *ngIf="u.modulos.tips">
+            <i class="fa fa-fw fa-lightbulb-o"></i>&nbsp;
+            <span>{{ 'Tips' | translate }}</span>
+        </a>
+        <a routerLink="/denuncias" [routerLinkActive]="['router-link-active']" class="list-group-item" *ngIf="u.modulos.denuncias">
+            <i class="fa fa-shield"></i>&nbsp;
+            <span>{{ 'Denuncias' | translate }}</span>
+        </a>
+        <!-- <a [routerLink]="['/web']" [routerLinkActive]="['router-link-active']" class="list-group-item" *ngIf="u.modulos.web">
+            <i class="fa fa-fw fa-desktop"></i>&nbsp;
+            <span>{{ 'Web' | translate }}</span>
+        </a> -->
+        <a routerLink="/movil" [routerLinkActive]="['router-link-active']" class="list-group-item" *ngIf="u.modulos.movil">
+            <i class="fa fa-mobile"></i>&nbsp;
+            <span>{{ 'Control App' | translate }}</span>
+        </a>
+        <a routerLink="/about" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-info-circle"></i>&nbsp;
+            <span>{{ 'Acerca de' | translate }}</span>
+        </a>
+        
+        <div class="header-fields">            
+            <!-- <div class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('languages')">
+                    <span><i class="fa fa-language"></i>&nbsp; {{ 'Language' | translate }} <b class="caret"></b></span>
+                </a>
+                <li class="nested" [class.expand]="showMenu === 'languages'">
+                    <ul class="submenu">
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('en')">
+                                {{ 'English' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('fr')">
+                                {{ 'French' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('ur')">
+                                {{ 'Urdu' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('es')">
+                                {{ 'Spanish' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('it')">
+                                {{ 'Italian' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('fa')">
+                                {{ 'Farsi' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" (click)="changeLang('de')">
+                                {{ 'German' | translate }}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div> -->
+            <div class="nested-menu">
+                <a class="list-group-item" (click)="addExpandClass('profile')">
+                    <span><i class="fa fa-user"></i>&nbsp;<strong>{{u.nombre}}</strong>&nbsp;
+                        <i class="fa fa-arrow-circle-down" style="font-size: 13px;"></i>
+                    </span>
+                </a>
+                <li class="nested" [class.expand]="showMenu === 'profile'">
+                    <ul class="submenu">
+                        <li>
+                            <a routerLink="/perfil">
+                                <span><i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}</span>
+                            </a>
+                        </li>                        
+                        <li>
+                            <a routerLink="/configuracion" *ngIf="u.modulos.ajustes">
+                                <span><i class="fa fa-fw fa-gear"></i> {{ 'Settings' | translate }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a (click)="onLoggedout()">
+                                <span><i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>    
+</nav>

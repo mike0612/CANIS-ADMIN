@@ -1,0 +1,200 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-clipboard'" [menu]="'Adopción'" [subicon]="'fa-file-o'"
+    [submenu]="'Solicitudes Adopción'">
+  </app-page-header>
+  <div class="row">
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card mb-3" *ngIf="table">
+        <div class="card-header">
+          Solicitudes de adopción
+          <div class="card-body table-responsive">
+            <table class="table table-hover table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Folio</th>
+                  <th>Fecha</th>
+                  <th>Nombre</th>
+                  <th>Teléfono</th>
+                  <th>Celular</th>
+                  <th>Status</th>
+                  <th colspan="3" title="Modificar/Eliminar">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let s of solicitudes; let i=index;">
+                  <td>{{i+1}}</td>
+                  <td>{{s.folio}}</td>
+                  <td>{{s.datosPersonales.fecha}}</td>
+                  <td>{{(s.datosPersonales.nombre.length>15) ? 
+                          (s.datosPersonales.nombre | slice:0:20) 
+                          + '...':(s.datosPersonales.nombre) }}
+                  </td>
+                  <td>{{s.datosPersonales.telefono}}</td>
+                  <td>{{s.datosPersonales.celular}}</td>
+                  <td>{{s.status}}</td>
+                  <td>
+                    <i class="fa fa-eye" aria-hidden="true" (click)="viewInfo(s)" title="Imprimir"></i>
+                  </td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" (click)="deleteMascota(s)" title="Eliminar"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <app-page-loading [title]="'Cargando datos'" *ngIf="loadingDB"></app-page-loading>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3" *ngIf="info">
+        <div class="card-header">
+          <strong>Solicitud:&nbsp;</strong>{{solicitud.folio}}
+          <div class="card-close">
+            <button class="boton" (click)="viewTable()">
+              <i class="fa fa-table"> Solicitudes</i>
+            </button>
+            <button class="boton" (click)="adoptar()" *ngIf="solicitud.status == 'En proceso'">
+              <i class="fa fa-paw" aria-hidden="true">Dar en adopción</i>
+            </button>
+            <button class="boton" (click)="exportPDF()">
+              <i class="fa fa-print" aria-hidden="true">Imprimir</i>
+            </button>
+          </div>
+          <hr>
+          <div class="card-body" id="contentToConvert">
+            <table class="table table-sm t table-bordered">
+              <tbody>
+                <tr>
+                  <td colspan="6" class="text-center">
+                    <strong>Formulario de adopción</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="6" class="text-center">
+                    CENTRO MUNICIPAL DE ATENCION CANINA Y FELINA
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    Apellidos y nombres:&nbsp;{{solicitud.datosPersonales.nombre}}&nbsp;
+                  </td>
+                  <td colspan="1">
+                    Teléfono:&nbsp;{{solicitud.datosPersonales.telefono}}
+                  </td>
+                  <td colspan="1">
+                    fecha: {{solicitud.datosPersonales.fecha}}
+                  </td>
+                  <td colspan="2">
+                    ciudad: {{solicitud.datosPersonales.ciudad}}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3"> </td>
+                  <td colspan="3">Estado civil:&nbsp;{{solicitud.datosPersonales.estado}} </td>
+                </tr>
+                <tr>
+                  <td colspan="6">Direccion: {{solicitud.datosPersonales.direccion}}</td>
+                </tr>
+                <tr>
+                  <td colspan="3">Email: {{solicitud.datosPersonales.correo}}</td>
+                  <td colspan="3">Teléfono: {{solicitud.datosPersonales.telefono}} </td>
+                </tr>
+                <tr>
+                  <td colspan="3">Celular: {{solicitud.datosPersonales.celular}}</td>
+                  <td colspan="3">Referencia: {{solicitud.datosPersonales.referencia}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">N°</td>
+                  <td colspan="5"class="text-center">PREGUNTAS Y RESPUESTAS</td>
+                </tr>
+                <tr>
+                  <td colspan="1">1</td>
+                  <td colspan="1">¿Por que deseas adoptar una mascota?</td>
+                  <td colspan="4">{{solicitud.respuestas.respuesta1}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">2</td>
+                  <td colspan="1">¿Actualmente tienes otros animales?</td>
+                  <td colspan="1">{{solicitud.respuestas.respuesta2}}</td>
+                  <td colspan="1">¿Cuáles?</td>
+                  <td colspan="2">{{solicitud.respuestas.respuesta2_1}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">3</td>
+                  <td colspan="1">¿Si los tiene, están esterilizados?</td>
+                  <td colspan="1">{{solicitud.respuestas.respuesta3}}</td>
+                  <td colspan="1">¿Porqué?</td>
+                  <td colspan="2">{{solicitud.respuestas.respuesta3_1}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">4</td>
+                  <td colspan="1">¿Anteriormente ha tenido otros animalitos?</td>
+                  <td colspan="1">{{solicitud.respuestas.respuesta4}}</td>
+                  <td colspan="1">¿Porqué?</td>
+                  <td colspan="2">{{solicitud.respuestas.respuesta4_1}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">5</td>
+                  <td colspan="2">¿Qué fue lo que paso con él/ellos?</td>
+                  <td colspan="3">{{solicitud.respuestas.respuesta5}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">6</td>
+                  <td colspan="3">¿Está de acuerdo en que se haga una visita periódica a su domicilio para ver
+                    como se encuentra el animal adoptado?</td>
+                  <td colspan="1">{{solicitud.respuestas.respuesta6}}</td>
+                  <td colspan="1">{{solicitud.respuestas.respuesta6_1}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">7</td>
+                  <td colspan="2">¿Cuantas personas viven en su casa?</td>
+                  <td colspan="3">{{solicitud.respuestas.respuesta7}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">8</td>
+                  <td colspan="2">¿Están todos de acuerdo en adoptar?</td>
+                  <td colspan="3">{{solicitud.respuestas.respuesta8}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">9</td>
+                  <td colspan="1">¿Hay niños en casa?</td>
+                  <td colspan="1">{{solicitud.respuestas.respuesta9}}</td>
+                  <td colspan="3">Edades: {{solicitud.respuestas.respuesta9_1}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">10</td>
+                  <td colspan="3">¿Alguien que viva con ustedes es alérgico a los animales o sufre de asma?</td>
+                  <td colspan="2">{{solicitud.respuestas.respuesta10}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">11</td>
+                  <td colspan="2">En caso de alquiler, ¿Sus arrendadores permiten animalitos en la casa o
+                    departamento?</td>
+                  <td colspan="3">{{solicitud.respuestas.respuesta11}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1">12</td>
+                  <td colspan="2">Si por algun motivo tuviera que cambiar de domicilio, ¿Qué pasaría con el
+                    animalito? </td>
+                  <td colspan="3">{{solicitud.respuestas.respuesta12}}</td>
+                </tr>
+                <tr>
+                  <td colspan="1"><img src="{{solicitud.mascota.foto}}" style="width: 80px;"></td>                  
+                  <td colspan="1">Folio: {{solicitud.mascota.folio}}</td>
+                  <td colspan="1">Edad: {{solicitud.mascota.edad}}</td>
+                  <td colspan="1">Raza: {{solicitud.mascota.raza}}</td>
+                  <td colspan="2">sexo: {{solicitud.mascota.sexo}}</td>                  
+                </tr>
+              </tbody>
+            </table>
+            <app-page-loading [title]="'Cargando datos'" *ngIf="loadingDB"></app-page-loading>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>

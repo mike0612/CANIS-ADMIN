@@ -1,0 +1,32 @@
+<div class="login-page" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4 shadow">
+            <hr>
+            <h1>Iniciar sesión</h1>
+            <img src="../../assets/images/logo.png" width="150px" class="user-avatar" />
+            <h2>Administración ARCA</h2>
+            <form class="form-validate" #f="ngForm">
+                <div class="form-content">
+                    <div class="form-group">
+                        <input type="text" name="email" required class="form-control input-underline input-lg"
+                            placeholder="{{ 'Email' | translate }}" [(ngModel)]="user.email" />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" required class="form-control input-underline input-lg"
+                            placeholder="{{ 'Password' | translate }}" [(ngModel)]="user.password" />
+                        <a class="float-right forgot" routerLink="/recuperar">Olvidé mi contraseña</a>
+                    </div>
+                </div>
+                <button class="btn rounded-btn" type="submit" (click)="validation(loading)" [disabled]="f.invalid">
+                    {{'Log in' | translate}}
+                </button>
+                <hr>
+            </form>
+        </div>
+    </div>
+    <ng-template #loading>
+        <div class="modal-body">
+            <app-page-loading [title]="title"></app-page-loading>
+        </div>
+    </ng-template>
+</div>

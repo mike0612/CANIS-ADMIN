@@ -1,0 +1,136 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-user'" [menu]="'Perfil'"></app-page-header>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">Datos generales</div>
+        <div class="card-body">
+          <form role="form" class="form-validate" #f="ngForm" *ngFor="let u of user">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Nombre (s)</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                      name="nombre" required [(ngModel)]="u.nombre">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Apellidos</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                      name="apellidos" required [(ngModel)]="u.apellidos">
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Cargo</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                      name="cargo" required [(ngModel)]="u.cargo" placeholder="Ej. Director">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">Teléfono</span>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                      name="telefono" required [(ngModel)]="u.telefono">
+                  </div>
+                </div>
+                <button class="btn btn-primary float-right" type="submit" [disabled]="f.invalid"
+                  style="background: #03215e; color: #fff" (click)="editUser(u)">Guardar cambios</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">Actualizar correo electrónico</div>
+        <div class="card-body">
+          <form role="form" class="form-validate" #f="ngForm" *ngFor="let u of user">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input type="email" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                      name="correo" required [(ngModel)]="u.correo">
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <button class="btn btn-primary float-right" type="submit" [disabled]="f.invalid"
+                  style="background: #03215e; color: #fff" (click)="cambiarMail(u)">Actualizar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">Cambiar contraseña</div>
+        <div class="card-body">
+          <form role="form" class="form-validate" #f="ngForm">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input type="password" class="form-control" aria-label="Small"
+                      aria-describedby="inputGroup-sizing-sm" name="password" required [(ngModel)]="pass.password"
+                      placeholder="Nueva contraseña">
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <div class="input-group mb-3">
+                    <input type="password" class="form-control" aria-label="Small"
+                      aria-describedby="inputGroup-sizing-sm" name="confirmarPass" required
+                      [(ngModel)]="pass.confirmarPass" placeholder="confirmar nueva contraseña">
+                  </div>
+                </div>
+                <button class="btn btn-primary float-right" type="submit" [disabled]="f.invalid"
+                  style="background: #03215e; color: #fff" (click)="cambiarPass()">Cambiar contraseña</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12" *ngFor="let u of user">
+      <div class="card mb-3" *ngIf="u.tipo == 2">
+        <div class="card-header">Eliminar mi cuenta</div>
+        <div class="card-body">
+          <form role="form" class="form-validate" #f="ngForm">
+            <div class="row">
+              <div class="col-lg-10">
+                <p class="text-justify">Al dar clic a este botón, usted está seguro de eliminar su cuenta
+                  de forma permanente y no volver a usar el sistema. Esta acción es
+                  irreversible y se eliminarán todos sus datos definitivamente.
+                </p>
+              </div>
+              <div class="col-lg-2">
+                <button class="btn float-right" type="submit" [disabled]="f.invalid"
+                  style="background: #dd2a2a; color: #fff" (click)="eliminarCuenta(u)">Eliminar</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

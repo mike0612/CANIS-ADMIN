@@ -1,0 +1,154 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-mobile'" [menu]="'Configuración aplicaciones'"></app-page-header>
+  <div class="row">
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          Arca versión movil
+          <div class="card-close">
+            <!--Agregar-->
+            <button class="boton" (click)="viewM()">
+              {{viewMovil ? ('Ocultar'):('Mostrar') }}
+            </button>
+          </div>
+          <div *ngIf="viewMovil">
+            <div class="card-body" *ngFor="let l of logoMovil">
+              <div class="card-body table-responsive">
+                <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge"></app-page-loading>
+                <table class="table table-hover table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>Logotipo 1</th>
+                      <th>Logotipo 2</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><img [src]=l.logo1 style="width: 90px; height:80px; display:flex; margin:0 auto;"></td>
+                      <td><img [src]=l.logo2 style="width: 90px; height:80px; display:flex; margin:0 auto;"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                          (change)="onUploadlogo1($event,l)" name="nameLogo1">
+                      </td>
+                      <td>
+                        <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                          (change)="onUploadlogo2($event,l)" name="nameLogo2">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          Arca versión web
+          <div class="card-close">
+            <!--Agregar-->
+            <button class="boton" (click)="viewW()">
+              {{viewWeb ? ('Ocultar'):('Mostrar') }}
+            </button>
+          </div>
+          <div *ngIf="viewWeb">
+            <div class="card-body" *ngFor="let l of logoMovil">
+              <div class="card-body table-responsive">
+                <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge2"></app-page-loading>
+                <table class="table table-hover table-striped table-sm">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Imágen</th>
+                      <th>Módulo</th>
+                      <th>Slogan</th>
+                      <th>Color 1</th>
+                      <th>Color 2</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let w of web; let i=index">
+                      <td>{{i+1}}</td>
+                      <td><img src="{{w.img}}" style="width: 60px; height:40px;"></td>
+                      <td>{{w.id}}</td>
+                      <td>{{(w.slogan.length>20) ? (w.slogan | slice:0:20) + '...':(w.slogan) }}</td>
+                      <td>
+                        <div style="width: 100%; height: 20px;" [style.background]="w.color1"></div>
+                      </td>
+                      <td>
+                        <div style="width: 100%; height: 20px;" [style.background]="w.color2"></div>
+                      </td>
+                      <td class="text-center">
+                        <i class="fa fa-pencil" aria-hidden="true" (click)="openEdit(w,w.id,editar)"
+                          title="Modificar"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #editar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Editar módulo: {{title}}</h5>
+    </div>
+    <div class="modal-body">
+      <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge"></app-page-loading>
+      <div align="center" *ngIf="newWebData.img">
+        <img class="preview" src={{newWebData.img}} alt="" style="width: 150px;">
+      </div>
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                  (change)="onUploadImageEdit($event, newWebData)" name="foto">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Color 1:
+                <strong>{{newWebData.color1}}</strong></span>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                [style.background]="newWebData.color1" [cpAlphaChannel]="'false'" [cpOutputFormat]="'hex'"
+                [(colorPicker)]="newWebData.color1">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Color 2:
+                <strong>{{newWebData.color2}}</strong></span>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                [style.background]="newWebData.color2" [cpAlphaChannel]="'false'" [cpOutputFormat]="'hex'"
+                [(colorPicker)]="newWebData.color2">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Slogan</span>
+              <textarea class="form-control" rows="3" aria-label="small" aria-describedby="inputGroup-sizing-sm"
+                name="descripcion" required [(ngModel)]="newWebData.slogan"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" (click)="editModulo(newWebData)"
+        [disabled]="!newWebData.img || f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+    </div>
+  </ng-template>
+</div>

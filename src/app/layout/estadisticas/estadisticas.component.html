@@ -1,0 +1,148 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-bar-chart-o'" [menu]="'Estadísticas'"></app-page-header>
+  <div class="row" *ngFor="let u of usuario">
+    <div class="col-sm-12 col-xs-12" *ngIf="u.modulos.adopta">
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-paw" aria-hidden="true"></i>
+          Adopción
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-4  col-xs-4">
+              <div class="card text-white bg-primary" routerLink="/mascotas">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-xs-3">
+                      <i class="fa fa-paw fa-3x"></i>
+                    </div>
+                    <div class="col col-xs-9 text-right">
+                      <div class="d-block huge">{{mascotas}}</div>
+                      <div class="d-block">Disponibles</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-4  col-xs-4">
+              <div class="card text-white bg-secondary" routerLink="/mascotaSolicitudes">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-xs-3">
+                      <i class="fa fa-file-o fa-3x"></i>
+                    </div>
+                    <div class="col col-xs-9 text-right">
+                      <div class="d-block huge">{{solicitudes}}</div>
+                      <div class="d-block">Solicitudes</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-4  col-xs-4">
+              <div class="card text-white bg-warning" routerLink="/mascotasAdoptadas">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-xs-3">
+                      <i class="fa fa-heart fa-3x"></i>
+                    </div>
+                    <div class="col col-xs-9 text-right">
+                      <div class="d-block huge">{{adoptados}}</div>
+                      <div class="d-block">Adoptados</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-xs-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-globe" aria-hidden="true"></i>
+          Modulos generales
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-4  col-xs-4" *ngIf="u.modulos.noticias">
+              <div class="card text-white bg-info" routerLink="/noticias">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-xs-3">
+                      <i class="fa fa-newspaper-o fa-3x"></i>
+                    </div>
+                    <div class="col col-xs-9 text-right">
+                      <div class="d-block huge">{{noticias}}</div>
+                      <div class="d-block">Noticias</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-4  col-xs-4" *ngIf="u.modulos.tips">
+              <div class="card text-white bg-success" routerLink="/tips">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-xs-3">
+                      <i class="fa fa-lightbulb-o fa-3x"></i>
+                    </div>
+                    <div class="col col-xs-9 text-right">
+                      <div class="d-block huge">{{tips}}</div>
+                      <div class="d-block">Tips</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-4  col-xs-4" *ngIf="u.modulos.denuncias">
+              <div class="card text-white bg-danger" routerLink="/denuncias">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col col-xs-3">
+                      <i class="fa fa-shield fa-3x"></i>
+                    </div>
+                    <div class="col col-xs-9 text-right">
+                      <div class="d-block huge">{{denuncias}}</div>
+                      <div class="d-block">Denuncias</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-12 col-xs-12" *ngIf="u.modulos.ajustes">
+        <div class="card mb-3">
+          <div class="card-header">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            Usuarios
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-12 col-sm-12 col-md-4  col-xs-4" *ngIf="u.modulos.noticias">
+                <div class="card text-white bg-info" routerLink="/configuracion">
+                  <div class="card-header">
+                    <div class="row">
+                      <div class="col col-xs-3">
+                        <i class="fa fa-user-circle fa-3x"></i>
+                      </div>
+                      <div class="col col-xs-9 text-right">
+                        <div class="d-block huge">{{usuarios}}</div>
+                        <div class="d-block">Total</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>                          
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>

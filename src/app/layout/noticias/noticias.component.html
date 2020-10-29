@@ -1,0 +1,189 @@
+<div [@routerTransition]>
+  <app-page-header [icon]="'fa-newspaper-o'" [menu]="'Noticias'">
+  </app-page-header>
+  <div class="row">
+    <div class="col col-xl-12 col-lg-12">
+      <div class="card mb-3">
+        <div class="card-header">
+          Noticias
+          <div class="card-close">
+            <!--Agregar-->
+            <button class="boton" (click)="openAdd(agregar,'Agregar')">
+              <i class="fa fa-plus-circle"> Nuevo</i>
+            </button>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Folio</th>
+                  <th>Foto</th>
+                  <th>Fecha</th>
+                  <th>Título</th>
+                  <th>Subtítulo</th>
+                  <th>Contenido</th>
+                  <th colspan="2" title="Modificar/Eliminar">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let n of noticias; let i=index;">
+                  <td>{{i+1}}</td>
+                  <td>{{n.folio}}</td>
+                  <td>
+                    <img style="width: 60px;height:40px;" src="{{n.foto}}">
+                  </td>
+                  <td>{{n.fecha}}</td>
+                  <td>
+                    {{ (n.titulo.length>10) ? (n.titulo | slice:0:10) + '...':(n.titulo) }}
+                  </td>
+                  <td>
+                    {{ (n.subtitulo.length>10) ? (n.subtitulo | slice:0:10) + '...':(n.subtitulo) }}
+                  </td>
+                  <td>
+                    {{ (n.contenido.length>15) ? (n.contenido | slice:0:15) + '...':(n.contenido) }}
+                  </td>
+                  <td>
+                    <i class="fa fa-pencil" aria-hidden="true" (click)="openEdit(n,n.folio,editar)"
+                      title="Modificar"></i>
+                  </td>
+                  <td>
+                    <i class="fa fa-trash" aria-hidden="true" (click)="deleteNoticia(n)" title="Eliminar"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <app-page-loading [title]="'Cargando datos'" *ngIf="loadingDB"></app-page-loading>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Large modal -->
+  <ng-template #agregar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Agregar nueva noticia</h5>
+    </div>
+    <div class="modal-body">
+      <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge"></app-page-loading>
+      <div align="center" *ngIf="newNoticia.foto">
+        <img src={{newNoticia.foto}} alt="" style="width: 150px;">
+      </div>
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                  (change)="onUploadImageAdd($event,newNoticia)" name="foto">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Fecha</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="fecha" required [(ngModel)]="newNoticia.fecha" placeholder="Formato: {{fecha}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Título</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="titulo" required [(ngModel)]="newNoticia.titulo">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Subtítulo</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="subtitulo" required [(ngModel)]="newNoticia.subtitulo">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Contenido</span>
+              <textarea class="form-control" rows="4" aria-label="small" aria-describedby="inputGroup-sizing-sm"
+                name="contenido" [(ngModel)]="newNoticia.contenido" required></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" (click)="addNoticia()"
+        [disabled]="!newNoticia.foto || f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModalNuevo(newNoticia)">Cancelar</button>
+    </div>
+  </ng-template>
+
+  <ng-template #editar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title">Editar noticia folio: {{title}}</h5>
+    </div>
+    <div class="modal-body">
+      <app-page-loading [title]="'Cargando imagen'" *ngIf="loadingImge"></app-page-loading>
+      <div align="center" *ngIf="noticia.foto">
+        <img src={{noticia.foto}} alt="" style="width: 150px;">
+      </div>
+      <div class="card-body">
+        <form class="form-validate" #f="ngForm">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="form-control" accept=".png, .jpg, .jpeg"
+                  (change)="onUploadImageAdd($event,noticia)" name="foto">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Fecha</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="fecha" required [(ngModel)]="noticia.fecha">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Título</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="titulo" required [(ngModel)]="noticia.titulo">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Subtítulo</span>
+              </div>
+              <input type="text" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                name="subtitulo" required [(ngModel)]="noticia.subtitulo">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-sm">Contenido</span>
+              <textarea class="form-control" rows="4" aria-label="small" aria-describedby="inputGroup-sizing-sm"
+                name="contenido" [(ngModel)]="noticia.contenido" required></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" (click)="editNoticia(noticia)"
+        [disabled]="!noticia.foto || f.invalid">Guardar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+    </div>
+  </ng-template>
+
+</div>
